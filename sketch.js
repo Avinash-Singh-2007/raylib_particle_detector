@@ -4,43 +4,50 @@ const geometry = require("./geometry");
 const screenWidth = 800;
 const screenHeight = 500;
 
-const detectorWidth = 50;
-let detectorX = 0;
+const detector1Width = 50;
+let detector1X = 0;
 
-let speed = 4;
+const detector2Width = 50;
+let detector2X = screenWidth / 2;
 
-function drawRange(x, y, width, height, color) {
-    r.DrawRectangle(x, y, width, height, color);
-}
-
-function drawDetector(detectorX, detectorY, detectorWidth, detectorHeight, color) {
-    drawRange(detectorX, detectorY, detectorWidth, detectorHeight, color);
-}
-
-function drawParticle(particleX, particleY, particleWidth, particleHeight, color) {
-    drawRange(particleX, particleY, particleWidth, particleHeight, color);
-}
+let speed1 = 3;
+let speed2 = 4;
 
 function running() {
     return !r.WindowShouldClose();
 }
 
 function setup() {
-    r.InitWindow(screenWidth, screenHeight, "center_rectangle");
-    r.SetTargetFPS(50);
+    const FPS = 60;
+    const title = "Particle Detector";
+
+    r.InitWindow(screenWidth, screenHeight, title);
+    r.SetTargetFPS(FPS);
 }
 
 function update() {
-    speed = geometry.edgeDetector(detectorX, detectorWidth, screenWidth, speed);
-    detectorX += speed;
+    const detector1Start = 0;
+    const detector1End = screenWidth / 2;
+
+    const detector2Start = screenWidth / 2;
+    const detector2End = screenWidth;
+
+    speed1 = geometry.edgeDetector(detector1X, detector1Width, detector1Start, detector1End, speed1);
+    detector1X += speed1;
+
+    speed2 = geometry.edgeDetector(detector2X, detector2Width, detector2Start, detector2End, speed2);
+    detector2X += speed2;
 }
 
 function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
 
-    const detectorY = 0;
-    const detectorHeight = screenHeight;
+    const detector1Y = 0;
+    const detector1Height = screenHeight;
+
+    const detector2Y = 0;
+    const detector2Height = screenHeight;
 
     const particle1X = 250;
     const particle1Y = 0;
@@ -52,13 +59,17 @@ function draw() {
     const particle2Width = 20;
     const particle2Height = screenHeight;
 
-    const overlap = geometry.detectOverlap(particle1X, particle1Width, detectorX, detectorWidth) || geometry.detectOverlap(particle2X, particle2Width, detectorX, detectorWidth);
-    const color = overlap ? r.ColorAlpha(r.RED, 0.6) : r.WHITE;
+    const overlap1 = geometry.detectOverlap(particle1X, particle1Width, detector1X, detector1Width);
+    const color1 = overlap1 ? r.ColorAlpha(r.RED, 0.6) : r.WHITE;
 
-    drawParticle(particle1X, particle1Y, particle1Width, particle1Height, r.SKYBLUE);
-    drawParticle(particle2X, particle2Y, particle2Width, particle2Height, r.SKYBLUE);
+    const overlap2 = geometry.detectOverlap(particle2X, particle2Width, detector2X, detector2Width);
+    const color2 = overlap2 ? r.ColorAlpha(r.RED, 0.6) : r.WHITE;
 
-    drawDetector(detectorX, detectorY, detectorWidth, detectorHeight, color);
+    r.DrawRectangle(particle1X, particle1Y, particle1Width, particle1Height, r.SKYBLUE);
+    r.DrawRectangle(particle2X, particle2Y, particle2Width, particle2Height, r.SKYBLUE);
+
+    r.DrawRectangle(detector1X, detector1Y, detector1Width, detector1Height, color1);
+    r.DrawRectangle(detector2X, detector2Y, detector2Width, detector2Height, color2);
 
     r.EndDrawing();
 }

@@ -2,14 +2,14 @@ function absolute(n) {
     return n < 0 ? -n : n;
 }
 
-function edgeDetector(detectorX, detectorWidth, screenWidth, speed) {
-    if (detectorX + detectorWidth >= screenWidth) return -speed;
-    if (detectorX <= 0) return absolute(speed);
+function edgeDetector(detectorX, detectorWidth, detectorStart, detectorEnd, speed) {
+    if (detectorX + detectorWidth >= detectorEnd) return -speed;
+    if (detectorX <= detectorStart) return absolute(speed);
     return speed;
 }
 
-function overlapDetector(range2Start, range2End, range1Start, range1End) {
-    return (range2Start > range1Start && range2Start < range1End) || (range2End > range1Start && range2End < range1End);
+function overlapDetector(range1Start, range1End, range2Start, range2End) {
+    return (range1Start > range2Start && range1Start < range2End) || (range1End > range2Start && range1End < range2End);
 }
 
 function detectOverlap(range1X, range1Width, range2X, range2Width) {
@@ -19,10 +19,10 @@ function detectOverlap(range1X, range1Width, range2X, range2Width) {
     const range2Start = range2X;
     const range2End = range2X + range2Width;
 
-    const detectRange1 = overlapDetector(range1Start, range1End, range2Start, range2End);
-    const detectRange2 = overlapDetector(range2Start, range2End, range1Start, range1End);
+    const checkRange1 = overlapDetector(range1Start, range1End, range2Start, range2End);
+    const checkRange2 = overlapDetector(range2Start, range2End, range1Start, range1End);
 
-    return detectRange1 || detectRange2;
+    return checkRange1 || checkRange2;
 }
 
 module.exports = {
