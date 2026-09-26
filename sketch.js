@@ -21,6 +21,16 @@ function drawParticle(particleX, particleY, particleWidth, particleHeight, color
     drawRange(particleX, particleY, particleWidth, particleHeight, color);
 }
 
+function detectOverlap(range1X, range1Width, range2X, range2Width) {
+    const range1Start = range1X;
+    const range1End = range1X + range1Width;
+
+    const range2Start = range2X;
+    const range2End = range2X + range2Width;
+
+    return (range2Start > range1Start && range2Start < range1End) || (range2End > range1Start && range2End < range1End);
+}
+
 function running() {
     return !r.WindowShouldClose();
 }
@@ -47,8 +57,11 @@ function draw() {
     const particleWidth = 70;
     const particleHeight = screenHeight;
 
+    const overlap = detectOverlap(particleX, particleWidth, detectorX, detectorWidth);
+    const color = overlap ? r.RED : r.WHITE;
+
     drawParticle(particleX, particleY, particleWidth, particleHeight, r.BLUE);
-    drawDetector(detectorX, detectorY, detectorWidth, detectorHeight, r.WHITE);
+    drawDetector(detectorX, detectorY, detectorWidth, detectorHeight, color);
 
     r.EndDrawing();
 }
