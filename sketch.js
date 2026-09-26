@@ -21,16 +21,6 @@ function drawParticle(particleX, particleY, particleWidth, particleHeight, color
     drawRange(particleX, particleY, particleWidth, particleHeight, color);
 }
 
-function detectOverlap(range1X, range1Width, range2X, range2Width) {
-    const range1Start = range1X;
-    const range1End = range1X + range1Width;
-
-    const range2Start = range2X;
-    const range2End = range2X + range2Width;
-
-    return (range2Start > range1Start && range2Start < range1End) || (range2End > range1Start && range2End < range1End);
-}
-
 function running() {
     return !r.WindowShouldClose();
 }
@@ -52,15 +42,22 @@ function draw() {
     const detectorY = 0;
     const detectorHeight = screenHeight;
 
-    const particleX = 250;
-    const particleY = 0;
-    const particleWidth = 70;
-    const particleHeight = screenHeight;
+    const particle1X = 250;
+    const particle1Y = 0;
+    const particle1Width = 70;
+    const particle1Height = screenHeight;
 
-    const overlap = detectOverlap(particleX, particleWidth, detectorX, detectorWidth);
-    const color = overlap ? r.RED : r.WHITE;
+    const particle2X = 500;
+    const particle2Y = 0;
+    const particle2Width = 20;
+    const particle2Height = screenHeight;
 
-    drawParticle(particleX, particleY, particleWidth, particleHeight, r.BLUE);
+    const overlap = geometry.detectOverlap(particle1X, particle1Width, detectorX, detectorWidth) || geometry.detectOverlap(particle2X, particle2Width, detectorX, detectorWidth);
+    const color = overlap ? r.ColorAlpha(r.RED, 0.6) : r.WHITE;
+
+    drawParticle(particle1X, particle1Y, particle1Width, particle1Height, r.SKYBLUE);
+    drawParticle(particle2X, particle2Y, particle2Width, particle2Height, r.SKYBLUE);
+
     drawDetector(detectorX, detectorY, detectorWidth, detectorHeight, color);
 
     r.EndDrawing();
