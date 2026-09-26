@@ -3,8 +3,8 @@ function absolute(n) {
 }
 
 function edgeDetector(detectorX, detectorWidth, screenWidth, speed) {
-    if (detectorX + detectorWidth === screenWidth) return -speed;
-    if (detectorX === 0) return absolute(speed);
+    if (detectorX + detectorWidth >= screenWidth) return -speed;
+    if (detectorX <= 0) return absolute(speed);
     return speed;
 }
 

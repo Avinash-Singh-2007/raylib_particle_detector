@@ -1,13 +1,25 @@
 const r = require("raylib");
 const geometry = require("./geometry");
 
-const screenWidth = 1000;
-const screenHeight = 700;
+const screenWidth = 800;
+const screenHeight = 500;
 
-const detectorWidth = 80;
+const detectorWidth = 50;
 let detectorX = 0;
 
 let speed = 4;
+
+function drawRange(x, y, width, height, color) {
+    r.DrawRectangle(x, y, width, height, color);
+}
+
+function drawDetector(detectorX, detectorY, detectorWidth, detectorHeight, color) {
+    drawRange(detectorX, detectorY, detectorWidth, detectorHeight, color);
+}
+
+function drawParticle(particleX, particleY, particleWidth, particleHeight, color) {
+    drawRange(particleX, particleY, particleWidth, particleHeight, color);
+}
 
 function running() {
     return !r.WindowShouldClose();
@@ -30,7 +42,13 @@ function draw() {
     const detectorY = 0;
     const detectorHeight = screenHeight;
 
-    r.DrawRectangle(detectorX, detectorY, detectorWidth, detectorHeight, r.WHITE);
+    const particleX = 250;
+    const particleY = 0;
+    const particleWidth = 70;
+    const particleHeight = screenHeight;
+
+    drawParticle(particleX, particleY, particleWidth, particleHeight, r.BLUE);
+    drawDetector(detectorX, detectorY, detectorWidth, detectorHeight, r.WHITE);
 
     r.EndDrawing();
 }
