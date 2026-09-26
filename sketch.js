@@ -10,12 +10,17 @@ let detector1X = 0;
 const detector2Width = 50;
 let detector2X = screenWidth / 2;
 
+<<<<<<< HEAD
 let detector1Speed = -3;
 let detector2Speed = -4;
 
 function selectColor(overlap) {
     return overlap ? r.ColorAlpha(r.RED, 0.6) : r.WHITE;
 }
+=======
+let detector1Speed = 3;
+let detector2Speed2 = 4;
+>>>>>>> 67b300902fc74d6486187007d86ee4b5481afec2
 
 function running() {
     return !r.WindowShouldClose();
@@ -36,11 +41,19 @@ function update() {
     const detector2Start = screenWidth / 2;
     const detector2End = screenWidth;
 
+<<<<<<< HEAD
     detector1Speed = geometry.calSpeed(detector1X, detector1Width, detector1Start, detector1End, detector1Speed);
     detector1X += detector1Speed;
 
     detector2Speed = geometry.calSpeed(detector2X, detector2Width, detector2Start, detector2End, detector2Speed);
     detector2X += detector2Speed;
+=======
+    detector1Speed = geometry.edgeDetector(detector1X, detector1Width, detector1Start, detector1End, detector1Speed);
+    detector1X += detector1Speed;
+
+    detector2Speed2 = geometry.edgeDetector(detector2X, detector2Width, detector2Start, detector2End, detector2Speed2);
+    detector2X += detector2Speed2;
+>>>>>>> 67b300902fc74d6486187007d86ee4b5481afec2
 }
 
 function draw() {
