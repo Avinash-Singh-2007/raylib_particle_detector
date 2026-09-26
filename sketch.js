@@ -10,8 +10,8 @@ let detector1X = 0;
 const detector2Width = 50;
 let detector2X = screenWidth / 2;
 
-let speed1 = 3;
-let speed2 = 4;
+let detector1Speed = 3;
+let detector2Speed2 = 4;
 
 function running() {
     return !r.WindowShouldClose();
@@ -32,11 +32,11 @@ function update() {
     const detector2Start = screenWidth / 2;
     const detector2End = screenWidth;
 
-    speed1 = geometry.edgeDetector(detector1X, detector1Width, detector1Start, detector1End, speed1);
-    detector1X += speed1;
+    detector1Speed = geometry.edgeDetector(detector1X, detector1Width, detector1Start, detector1End, detector1Speed);
+    detector1X += detector1Speed;
 
-    speed2 = geometry.edgeDetector(detector2X, detector2Width, detector2Start, detector2End, speed2);
-    detector2X += speed2;
+    detector2Speed2 = geometry.edgeDetector(detector2X, detector2Width, detector2Start, detector2End, detector2Speed2);
+    detector2X += detector2Speed2;
 }
 
 function draw() {
