@@ -2,9 +2,17 @@ function absolute(n) {
     return n < 0 ? -n : n;
 }
 
-function edgeDetector(detectorX, detectorWidth, detectorStart, detectorEnd, speed) {
-    if (detectorX + detectorWidth >= detectorEnd) return -speed;
-    if (detectorX <= detectorStart) return absolute(speed);
+function checkStartBoundary(x, start) {
+    return x <= start;
+}
+
+function checkEndBoundary(x, end) {
+    return x >= end;
+}
+
+function calSpeed(detectorX, detectorWidth, detectorStart, detectorEnd, speed) {
+    if (checkStartBoundary(detectorX, detectorStart)) return absolute(speed);
+    if (checkEndBoundary(detectorX + detectorWidth, detectorEnd)) return -speed;
     return speed;
 }
 
@@ -27,6 +35,6 @@ function detectOverlap(range1X, range1Width, range2X, range2Width) {
 
 module.exports = {
     absolute,
-    edgeDetector,
+    calSpeed,
     detectOverlap,
 }
