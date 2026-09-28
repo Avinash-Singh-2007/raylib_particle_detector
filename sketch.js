@@ -1,102 +1,81 @@
 const r = require("raylib");
-const geometry = require("./geometry");
-
-const screenWidth = 800;
-const screenHeight = 500;
-
-const detector1Width = 50;
-let detector1X = 0;
-
-const detector2Width = 50;
-let detector2X = screenWidth / 2;
-
-const detector3Height = 30;
-let detector3Y = 0;
-
-let detector1Speed = 3;
-let detector2Speed = 4;
-let detector3Speed = 3;
-
-function selectColor(overlap) {
-    return overlap ? r.ColorAlpha(r.RED, 0.6) : r.WHITE;
-}
+const p1 = require("./particles/particle1");
+const p2 = require("./particles/particle2");
+const p3 = require("./particles/particle3");
+const d1 = require("./detectors/detector1");
+const d2 = require("./detectors/detector2");
+const d3 = require("./detectors/detector3");
+const d = require("./detectors/detector");
 
 function running() {
     return !r.WindowShouldClose();
 }
 
-function setup() {
-    const FPS = 50;
-    const title = "Particle Detector";
-
-    r.InitWindow(screenWidth, screenHeight, title);
+function setup(WIDTH, HEIGHT, TITLE, FPS) {
+    r.InitWindow(WIDTH, HEIGHT, TITLE);
     r.SetTargetFPS(FPS);
+
+    d1.end = r.GetScreenWidth() / 2;
+
+    d2.x = r.GetScreenWidth() / 2;
+    d2.start = r.GetScreenWidth() / 2;
+    d2.end = r.GetScreenWidth();
+
+    d3.end = r.GetScreenHeight();
 }
 
 function update() {
-    const detector1Start = 0;
-    const detector1End = screenWidth / 2;
+    d1.velocity = d.updateVelocity(
+        d1.x,
+        d1.WIDTH,
+        d1.START,
+        d1.end,
+        d1.velocity,
+    );
+    d1.x = d.move(d1.x, d1.velocity);
+    d1.color = d.selectColor(
+        d.isOverlapping(p1.X, p1.WIDTH, d1.x, d1.WIDTH, p2.X, p2.WIDTH),
+    );
 
-    const detector2Start = screenWidth / 2;
-    const detector2End = screenWidth;
+    d2.velocity = d.updateVelocity(
+        d2.x,
+        d2.WIDTH,
+        d2.start,
+        d2.end,
+        d2.velocity,
+    );
+    d2.x = d.move(d2.x, d2.velocity);
+    d2.color = d.selectColor(
+        d.isOverlapping(p1.X, p1.WIDTH, d2.x, d2.WIDTH, p2.X, p2.WIDTH),
+    );
 
-    const detector3Start = 0;
-    const detector3End = screenHeight;
-
-    detector1Speed = geometry.calSpeed(detector1X, detector1Width, detector1Start, detector1End, detector1Speed);
-    detector1X += detector1Speed;
-
-    detector2Speed = geometry.calSpeed(detector2X, detector2Width, detector2Start, detector2End, detector2Speed);
-    detector2X += detector2Speed;
-
-    detector3Speed = geometry.calSpeed(detector3Y, detector3Height, detector3Start, detector3End, detector3Speed);
-    detector3Y += detector3Speed;
+    d3.velocity = d.updateVelocity(
+        d3.y,
+        d3.HEIGHT,
+        d3.START,
+        d3.end,
+        d3.velocity,
+    );
+    d3.y = d.move(d3.y, d3.velocity);
+    d3.color = d.selectColor(
+        d.overlapDetector(p3.Y, p3.HEIGHT + p3.Y, d3.y, d3.HEIGHT + d3.y),
+    );
 }
 
 function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
 
-    const detector1Y = 0;
-    const detector1Height = screenHeight;
+    const HEIGHT = r.GetScreenHeight();
+    const WIDTH = r.GetScreenWidth();
 
-    const detector2Y = 0;
-    const detector2Height = screenHeight;
+    r.DrawRectangle(p1.X, p1.Y, p1.WIDTH, HEIGHT, r.SKYBLUE);
+    r.DrawRectangle(p2.X, p2.Y, p2.WIDTH, HEIGHT, r.SKYBLUE);
+    r.DrawRectangle(p3.X, p3.Y, WIDTH, p3.HEIGHT, r.SKYBLUE);
 
-    const detector3X = 0;
-    const detector3Width = screenWidth;
-
-    const particle1X = 150;
-    const particle1Y = 0;
-    const particle1Width = 70;
-    const particle1Height = screenHeight;
-
-    const particle2X = 550;
-    const particle2Y = 0;
-    const particle2Width = 20;
-    const particle2Height = screenHeight;
-
-    const particle3X = 0;
-    const particle3Y = 220;
-    const particle3Width = screenWidth;
-    const particle3Height = 30;
-
-    const overlap1 = geometry.detectOverlap(particle1X, particle1Width, detector1X, detector1Width) || geometry.detectOverlap(particle2X, particle2Width, detector1X, detector1Width);
-    const color1 = selectColor(overlap1);
-
-    const overlap2 = geometry.detectOverlap(particle1X, particle1Width, detector2X, detector2Width) || geometry.detectOverlap(particle2X, particle2Width, detector2X, detector2Width);
-    const color2 = selectColor(overlap2);
-
-    const overlap3 = geometry.detectOverlap(particle3Y, particle3Height, detector3Y, detector3Height);
-    const color3 = selectColor(overlap3);
-
-    r.DrawRectangle(particle1X, particle1Y, particle1Width, particle1Height, r.SKYBLUE);
-    r.DrawRectangle(particle2X, particle2Y, particle2Width, particle2Height, r.SKYBLUE);
-    r.DrawRectangle(particle3X, particle3Y, particle3Width, particle3Height, r.SKYBLUE)
-
-    r.DrawRectangle(detector1X, detector1Y, detector1Width, detector1Height, color1);
-    r.DrawRectangle(detector2X, detector2Y, detector2Width, detector2Height, color2);
-    r.DrawRectangle(detector3X, detector3Y, detector3Width, detector3Height, color3);
+    r.DrawRectangle(d1.x, d1.Y, d1.WIDTH, HEIGHT, d1.color);
+    r.DrawRectangle(d2.x, d2.Y, d2.WIDTH, HEIGHT, d2.color);
+    r.DrawRectangle(d3.X, d3.y, WIDTH, d3.HEIGHT, d3.color);
 
     r.EndDrawing();
 }
@@ -111,4 +90,4 @@ module.exports = {
     update,
     draw,
     tearDown,
-}
+};
